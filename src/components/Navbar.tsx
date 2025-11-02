@@ -1,6 +1,6 @@
-/* eslint-disable react/jsx-indent, @typescript-eslint/indent */
 'use client';
 
+/* eslint-disable react/jsx-indent, @typescript-eslint/indent */
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
@@ -25,7 +25,7 @@ const NavBar: React.FC = () => {
                   Add Stuff
                 </Nav.Link>,
                 <Nav.Link id="list-stuff-nav" href="/list" key="list" active={pathName === '/list'}>
-                  List Stuff
+                  List Contacts
                 </Nav.Link>,
               ]
               : ''}
