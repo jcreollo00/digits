@@ -4,6 +4,15 @@ import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
+interface ContactData {
+  firstName: string;
+  lastName: string;
+  address: string;
+  image: string;
+  description: string;
+  owner: string;
+}
+
 async function main() {
   console.log('Seeding the database');
   const password = await hash('changeme', 10);
@@ -23,7 +32,7 @@ async function main() {
   });
   for (const data of config.defaultData) {
     const condition = data.condition as Condition || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+    console.log(`  Adding stuff: ${data.name} (${data.owner})`);
     // eslint-disable-next-line no-await-in-loop
     await prisma.stuff.upsert({
       where: { id: config.defaultData.indexOf(data) + 1 },
@@ -36,7 +45,24 @@ async function main() {
       },
     });
   }
+  for (const contact of config.defaultContacts as ContactData[]) {
+    console.log(`  Adding contact: ${contact.firstName} ${contact.lastName}`);
+    // eslint-disable-next-line no-await-in-loop
+    await prisma.contact.upsert({
+      where: { id: config.defaultContacts.indexOf(contact) + 1 },
+      update: {},
+      create: {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        address: contact.address,
+        image: contact.image,
+        description: contact.description,
+        owner: contact.owner,
+      },
+    });
+  }
 }
+
 main()
   .then(() => prisma.$disconnect())
   .catch(async (e) => {
@@ -44,3 +70,4 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+  
