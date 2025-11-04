@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, Image } from 'react-bootstrap';
+import Link from 'next/link';
 
 interface ContactCardProps {
   firstName: string;
@@ -8,11 +9,12 @@ interface ContactCardProps {
   address: string;
   image: string;
   description: string;
+  id: number;
 }
 
 /* Renders a single contact card. See list/page.tsx. */
 const ContactCard = (props: ContactCardProps) => {
-  const { firstName, lastName, address, image, description } = props;
+  const { firstName, lastName, address, image, description, id } = props;
   return (
     <Card className="h-100">
       <Card.Header>
@@ -27,6 +29,9 @@ const ContactCard = (props: ContactCardProps) => {
       <Card.Body>
         <Card.Text>{description}</Card.Text>
       </Card.Body>
+      <Card.Footer>
+        <Link href={`edit/${id}`}>Edit</Link>
+      </Card.Footer>
     </Card>
   );
 };
