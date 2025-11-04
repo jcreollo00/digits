@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import StuffItemAdmin from '@/components/StuffItemAdmin';
+import ContactCardAdmin from '@/components/ContactCardAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
@@ -13,8 +14,8 @@ const AdminPage = async () => {
     } | null,
   );
   const stuff = await prisma.stuff.findMany({});
+  const contacts = await prisma.contact.findMany({});
   const users = await prisma.user.findMany({});
-
   return (
     <main>
       <Container id="list" fluid className="py-3">
@@ -33,10 +34,36 @@ const AdminPage = async () => {
               </thead>
               <tbody>
                 {stuff.map((item) => (
-                  <StuffItemAdmin key={item.id} {...item} />
+                  <StuffItemAdmin
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    quantity={item.quantity}
+                    condition={item.condition}
+                    owner={item.owner}
+                  />
                 ))}
               </tbody>
             </Table>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h2>List Contacts (Admin)</h2>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              {contacts.map((contact) => (
+                <Col key={`Contact-${contact.firstName}-${contact.id}`}>
+                  <ContactCardAdmin
+                    firstName={contact.firstName}
+                    lastName={contact.lastName}
+                    address={contact.address}
+                    image={contact.image}
+                    description={contact.description}
+                    owner={contact.owner}
+                  />
+                </Col>
+              ))}
+            </Row>
           </Col>
         </Row>
         <Row>
