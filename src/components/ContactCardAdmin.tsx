@@ -1,36 +1,36 @@
 'use client';
 
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, ListGroup } from 'react-bootstrap';
+import { Contact, Note } from '@prisma/client';
+import NoteItem from './NoteItem';
 
 interface ContactCardAdminProps {
-  firstName: string;
-  lastName: string;
-  address: string;
-  image: string;
-  description: string;
-  owner: string;
+  contact: Contact;
+  notes: Note[];
 }
 
 /* Renders a single contact card for admin. See admin/page.tsx. */
-const ContactCardAdmin = (props: ContactCardAdminProps) => {
-  const { firstName, lastName, address, image, description, owner } = props;
-  return (
-    <Card className="h-100">
-      <Card.Header>
-        <Image src={image} width={75} />
-        <Card.Title>
-          {firstName}
-          {' '}
-          {lastName}
-        </Card.Title>
-        <Card.Subtitle>{address}</Card.Subtitle>
-      </Card.Header>
-      <Card.Body>
-        <Card.Text>{description}</Card.Text>
-        <p className="blockquote-footer">{owner}</p>
-      </Card.Body>
-    </Card>
-  );
-};
+const ContactCardAdmin = ({ contact, notes }: ContactCardAdminProps) => (
+  <Card className="h-100">
+    <Card.Header>
+      <Image src={contact.image} width={75} />
+      <Card.Title>
+        {contact.firstName}
+        {' '}
+        {contact.lastName}
+      </Card.Title>
+      <Card.Subtitle>{contact.address}</Card.Subtitle>
+    </Card.Header>
+    <Card.Body>
+      <Card.Text>{contact.description}</Card.Text>
+      <p className="blockquote-footer">{contact.owner}</p>
+    </Card.Body>
+    <ListGroup variant="flush">
+      {notes.map((note) => (
+        <NoteItem key={note.id} note={note} />
+      ))}
+    </ListGroup>
+  </Card>
+);
 
 export default ContactCardAdmin;
