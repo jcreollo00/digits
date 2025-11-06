@@ -1,10 +1,9 @@
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
-import { Stuff, Contact } from '@prisma/client';
+import { Contact } from '@prisma/client';
 import authOptions from '@/lib/authOptions';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
-import EditStuffForm from '@/components/EditStuffForm';
 import EditContactForm from '@/components/EditContactForm';
 
 export default async function EditPage({ params }: { params: { id: string | string[] } }) {
@@ -19,7 +18,7 @@ export default async function EditPage({ params }: { params: { id: string | stri
   const id = Number(Array.isArray(params?.id) ? params?.id[0] : params?.id);
   // console.log(id);
 
-  // Try to find a contact first
+  // Try to find a contact
   const contact: Contact | null = await prisma.contact.findUnique({
     where: { id },
   });
@@ -32,19 +31,6 @@ export default async function EditPage({ params }: { params: { id: string | stri
     );
   }
 
-  // If no contact found, try to find stuff
-  const stuff: Stuff | null = await prisma.stuff.findUnique({
-    where: { id },
-  });
-
-  if (stuff) {
-    return (
-      <main>
-        <EditStuffForm stuff={stuff} />
-      </main>
-    );
-  }
-
-  // If neither found, return 404
+  // If not found, return 404
   return notFound();
 }
